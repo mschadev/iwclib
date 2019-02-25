@@ -114,6 +114,40 @@ SendStr(Title,Str,Delay=0){
         }
 		return true
 }
-InactiveImageSearch(refX,refY,Target,Image,X,Y,W,H,Loc){
+
+InactiveImageSearch(byref RefX,byref RefY,Title,Image,X1=0,Y1=0,X2=0,Y2=0,Loc=10){
+	if(!Init()){
+		return false
+	}
+	WinGet, hWnd,ID,%Title%
+	if(hWnd == 0){
+		return false
+	}	
 	_Token := Gdip_Startup()
+	_Bitmap := Capture(Title)
+	if(_Bitmap = 0){
+		return false
+	}
+	_Image := Gdip_CreateBitmapFromFile(Image)
+	if(_Image = 0){
+		if(_Bitmap != 0){
+			Gdip_DisposeImage(_Bitmap)
+		}
+		return false
+	}
+	_Success := Gdip_ImageSearch(_Bitmap,_Image,Point,X1,Y1,X2,Y2,Loc,0x000000,1,1)
+	if(_Success = true){
+		StringSplit,PointArray,Point,`,
+		RefX := PointArray1
+		RefY := PointArray2
+	}
+	else{
+		RefX := 0
+		RefY := 0
+	}
+	Gdip_DisposeImage(_Bitmap)
+	Gdip_DisposeImage(_Image)
+	Gdip_Shutdown(_Token)
+	return _Success
 }
+
