@@ -1,17 +1,10 @@
 ﻿# Ahk-inactive-library
 
 This is a simple library for using inactive functions.
-
-  - Type some Markdown on the left
-  - See HTML in the right
-  - Magic
-
 # Installation
 
-  1. Download "lib\gdip.ahk" and "active.ahk."
-  2. Include "gdip.ahk" and "active.ahk" in the script.
-
-
+  1. Download "lib\gdip.ahk" and "Inactive.ahk."
+  2. Include "gdip.ahk" and "Inactive.ahk" in the script.
 ```autoit
 #include gdip.ahk
 #include inactive.ahk
@@ -20,7 +13,7 @@ This is a simple library for using inactive functions.
 # Supported functions
 Table of supported functions.
 
-## Capture
+### Capture
 | Function | Description |
 | ------ | ------ |
 | CaptureforSave | Inactive Windows Program Capture for save |
@@ -28,13 +21,13 @@ Table of supported functions.
 | ScreenCaptureforSave  | Inactive Windows Screen Capture for save |
 | Capture | Inactive Windows Program Capture |
 
-## Control
+### Control
 | Function | Description |
 | ------ | ------ |
 | SimpleClick | Inactive Mouse Click(left) |
 | SendStr | Inactive Send string |
 
-## Windows
+### Windows
 | Function | Description |
 | ------ | ------ |
 | InactiveImageSearch | Inactive Image Search |
@@ -42,7 +35,7 @@ Table of supported functions.
 | HideWindow | Hide Window |
 | ShowWindow | Show Window |
 
-## Order
+### Order
 | Function | Description |
 | ------ | ------ |
 | Init | Inactive ready Init Function |
