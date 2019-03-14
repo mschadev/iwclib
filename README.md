@@ -31,6 +31,7 @@ Table of supported functions.
 | Function | Description |
 | ------ | ------ |
 | InactiveImageSearch | Inactive Image Search |
+| ImageSearchFromFile | ImageSearch From Image File |
 | InactivePixelSearch | Inactive Pixel Search |
 | HideWindow | Hide Window |
 | ShowWindow | Show Window |
@@ -39,6 +40,8 @@ Table of supported functions.
 | Function | Description |
 | ------ | ------ |
 | Init | Inactive ready Init Function |
+| MakeKeyDownLParam | Function to create lparam required for 'postmessage' |
+| MakeKeyUpLParam | Function to create lparam required for 'postmessage' |
 
 
 ## development environment
