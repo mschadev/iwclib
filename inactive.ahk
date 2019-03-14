@@ -170,23 +170,57 @@ SendStr(Title,Str,Delay=0){
 ;Loc := Image error range
 ;SearchDirection := Haystack search direction
 ; Vertical preference:
-;  1 = top->left->right->bottom [default]
-;  2 = bottom->left->right->top
-;  3 = bottom->right->left->top
-;  4 = top->right->left->bottom
+;  T|L = top->left->right->bottom [default]
+;  B|L = bottom->left->right->top
+;  B|R = bottom->right->left->top
+;  T|R = top->right->left->bottom
 ; Horizontal preference:
-;  5 = left->top->bottom->right
-;  6 = left->bottom->top->right
-;  7 = right->bottom->top->left
-;  8 = right->top->bottom->left
+;  L|T = left->top->bottom->right
+;  L|B = left->bottom->top->right
+;  R|B = right->bottom->top->left
+;  R|T = right->top->bottom->left
 ;Instances := Minimum number of search images
 ;return value :1 if successful, 0 if failed
 ;ex)InactiveImageSearch("작업 관리자","test.png",X,Y)
 ;======================================
-InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection=1,Instances=1){
+InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection="T|L",Instances=1){
 	if(!Init()){
 		return false
 	}
+	
+	if(SearchDirection = "B|L")
+	{
+		_SearchDirection := 2
+	}
+	else if(SearchDirection = "B|R")
+	{
+		_SearchDirection := 3
+	}
+	else if(SearchDirection = "T|R")
+	{
+		_SearchDirection := 4
+	}
+	else if(SearchDirection = "L|T")
+	{
+		_SearchDirection := 5
+	}
+	else if(SearchDirection = "L|B")
+	{
+		_SearchDirection := 6
+	}
+	else if(SearchDirection = "R|B")
+	{
+		_SearchDirection := 7
+	}
+	else if(SearchDirection = "R|T")
+	{
+		_SearchDirection := 8
+	}
+	else
+	{
+		_SearchDirection := 1
+	}
+	;MsgBox,%_SearchDirection%
 	_Token := Gdip_Startup()
 	_hBitmap := Capture(Title)
 	if(_hBitmap = 0){
@@ -198,9 +232,97 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 		if(_hBitmap != 0){
 			Gdip_DisposeImage(_hBitmap)
 		}
+		Gdip_Shutdown(_Token)
 		return false
 	}
 	_Success := Gdip_ImageSearch(_hBitmap,_Image,Point,X1,Y1,X2,Y2,Loc,0x000000,SearchDirection,Instances)
+	if(_Success = true){
+		StringSplit,PointArray,Point,`,
+		RefX := PointArray1
+		RefY := PointArray2
+	}
+	else{
+		RefX := 0
+		RefY := 0
+	}
+	Gdip_DisposeImage(_hBitmap)
+	Gdip_DisposeImage(_Image)
+	Gdip_Shutdown(_Token)
+	return _Success
+}
+;======================================
+;ImageSearch from image file
+;BackgroundImage := Background image path
+;TargetImage := Target image path
+;RefX := Point x var
+;RefY := Point y var
+;X1 := Rect left
+;Y1 := Rect top
+;X2 := Rect right
+;Y2 := Rect bottom
+;Loc := Image error range
+;SearchDirection := Haystack search direction
+; Vertical preference:
+;  T|L = top->left->right->bottom [default]
+;  B|L = bottom->left->right->top
+;  B|R = bottom->right->left->top
+;  T|R = top->right->left->bottom
+; Horizontal preference:
+;  L|T = left->top->bottom->right
+;  L|B = left->bottom->top->right
+;  R|B = right->bottom->top->left
+;  R|T = right->top->bottom->left
+;Instances := Minimum number of search images
+;return value :1 if successful, 0 if failed
+;ex)ImageSearchFromFile("Background.png","target.png",X,Y)
+;======================================
+ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection="T|L",Instances=1){
+	if(!Init()){
+		return false
+	}
+	
+	if(SearchDirection = "B|L")
+	{
+		_SearchDirection := 2
+	}
+	else if(SearchDirection = "B|R")
+	{
+		_SearchDirection := 3
+	}
+	else if(SearchDirection = "T|R")
+	{
+		_SearchDirection := 4
+	}
+	else if(SearchDirection = "L|T")
+	{
+		_SearchDirection := 5
+	}
+	else if(SearchDirection = "L|B")
+	{
+		_SearchDirection := 6
+	}
+	else if(SearchDirection = "R|B")
+	{
+		_SearchDirection := 7
+	}
+	else if(SearchDirection = "R|T")
+	{
+		_SearchDirection := 8
+	}
+	else
+	{
+		_SearchDirection := 1
+	}
+	_Token := Gdip_Startup()
+	_BackgroundBitmap := Gdip_CreateBitmapFromFile(BackgroundImage)
+	_TargetBitmap := Gdip_CreateBitmapFromFile(TargetImage)
+	if(_BackgroundBitmap = 0 || _TargetBitmap = 0){
+		Gdip_Shutdown(_Token)
+		Gdip_DisposeImage(_BackgroundBitmap)
+		Gdip_DisposeImage(_TargetBitmap)
+		return false
+	}
+	_Success := Gdip_ImageSearch(_BackgroundBitmap,_TargetBitmap,Point,X1,Y1,X2,Y2,Loc,0x000000,SearchDirection,Instances)
 	if(_Success = true){
 		StringSplit,PointArray,Point,`,
 		RefX := PointArray1
@@ -290,4 +412,25 @@ HideWindow(Title){
 ;======================================
 ShowWindow(Title){
 	WinMove, %Title%,,0,0
+}
+;======================================
+;Function to create lparam required for 'postmessage'
+;vk : VK Code (https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes)
+;ex)MakeKeyUpLParam(65)
+;======================================
+MakeKeyUpLParam(vk=0){
+	_scan := DllCall("MapVirtualKey","Uint",vk,"Uint",0,"Uint")
+	_LParam := (0x00000001 | (_scan << 16))
+	return _LParam
+}
+;======================================
+;Function to create lparam required for 'postmessage'
+;vk : VK Code (https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes)
+;ex)MakeKeyUpLParam(65)
+;======================================
+MakeKeyDownLParam(vk=0){
+	_scan := DllCall("MapVirtualKey","Uint",vk,"Uint",0,"Uint")
+	_LParam := (0x00000001 | (_scan << 16))
+	_LParam |= 0xC0000000
+	return _LParam
 }
