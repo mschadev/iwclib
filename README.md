@@ -36,7 +36,7 @@ Table of supported functions.
 | HideWindow | Hide Window |
 | ShowWindow | Show Window |
 
-### Order
+### Etc
 | Function | Description |
 | ------ | ------ |
 | Init | Inactive ready Init Function |
