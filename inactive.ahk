@@ -179,9 +179,9 @@ SendStr(Title,Str,Delay=0){
 ;  L|B = left->bottom->top->right
 ;  R|B = right->bottom->top->left
 ;  R|T = right->top->bottom->left
-;Instances := Minimum number of search images
-;return value :1 if successful, 0 if failed
-;ex)InactiveImageSearch("작업 관리자","test.png",X,Y)
+;Instances := Maximum number of instances to find when searching (0 = find all)
+;return value: Number of images found
+;ex)InactiveImageSearch("작업 관리자","test.png",X[1],Y[1])
 ;======================================
 InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection="T|L",Instances=1){
 	if(!Init()){
@@ -235,11 +235,22 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 		Gdip_Shutdown(_Token)
 		return false
 	}
-	_Success := Gdip_ImageSearch(_hBitmap,_Image,Point,X1,Y1,X2,Y2,Loc,0x000000,SearchDirection,Instances)
-	if(_Success = true){
-		StringSplit,PointArray,Point,`,
-		RefX := PointArray1
-		RefY := PointArray2
+	_Success := Gdip_ImageSearch(_hBitmap,_Image,PointArray,X1,Y1,X2,Y2,Loc,"",SearchDirection,Instances)
+	
+	if(_Success > 0){
+		_ArrayX := Object()
+		_ArrayY := Object()
+		;MsgBox,%PointArray%
+		loop,parse,PointArray,`n
+		{
+			StringSplit,Point,A_LoopField,`,
+			;MsgBox,%A_Index% %Point1% %Point2%
+			_ArrayX.Insert(Point1)
+			_ArrayY.Insert(Point2)
+			
+		}
+		RefX := _ArrayX
+		RefY := _ArrayY
 	}
 	else{
 		RefX := 0
@@ -272,9 +283,9 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 ;  L|B = left->bottom->top->right
 ;  R|B = right->bottom->top->left
 ;  R|T = right->top->bottom->left
-;Instances := Minimum number of search images
-;return value :1 if successful, 0 if failed
-;ex)ImageSearchFromFile("Background.png","target.png",X,Y)
+;Instances := Maximum number of instances to find when searching (0 = find all)
+;return value: Number of images found
+;ex)ImageSearchFromFile("Background.png","target.png",X[1],Y[1])
 ;======================================
 ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection="T|L",Instances=1){
 	if(!Init()){
@@ -322,11 +333,21 @@ ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,
 		Gdip_DisposeImage(_TargetBitmap)
 		return false
 	}
-	_Success := Gdip_ImageSearch(_BackgroundBitmap,_TargetBitmap,Point,X1,Y1,X2,Y2,Loc,0x000000,SearchDirection,Instances)
-	if(_Success = true){
-		StringSplit,PointArray,Point,`,
-		RefX := PointArray1
-		RefY := PointArray2
+	_Success := Gdip_ImageSearch(_BackgroundBitmap,_TargetBitmap,PointArray,X1,Y1,X2,Y2,Loc,"",SearchDirection,Instances)
+	if(_Success > 0){
+		_ArrayX := Object()
+		_ArrayY := Object()
+		;MsgBox,%PointArray%
+		loop,parse,PointArray,`n
+		{
+			StringSplit,Point,A_LoopField,`,
+			;MsgBox,%A_Index% %Point1% %Point2%
+			_ArrayX.Insert(Point1)
+			_ArrayY.Insert(Point2)
+			
+		}
+		RefX := _ArrayX
+		RefY := _ArrayY
 	}
 	else{
 		RefX := 0
