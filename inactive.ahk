@@ -9,22 +9,27 @@
 ;return value :Bitmap pointer(address).If not zero, success.
 ;ex)Capture(0x50af4)
 ;======================================
-CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0){
-	if(!Init()){
+CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0)
+{
+	if(!Init())
+	{
 		return false
 	}
 	WinGet, hWnd,ID,%Title%
-	if(hWnd == 0){
+	if(hWnd == 0)
+	{
 		return false
 	}	
 	_Token := Gdip_Startup()
 	_hBitmap := Gdip_BitmapFromHwnd(hWnd,Flag)
-	if(!_hBitmap){
+	if(!_hBitmap)
+	{
 		Gdip_ShutDown(_Token)
 		return false
 	}
 	WinGetPos,_X,_Y,_Width,_Height,ahk_id %hWnd%
-	if(w!=0 && h!=0 && x >=0 && y >= 0 && w+x <= _Width && y+h <= _Height){
+	if(w!=0 && h!=0 && x >=0 && y >= 0 && w+x <= _Width && y+h <= _Height)
+	{
 		_hBitmap_temp := _hBitmap ;주소값 대입 후 메모리 해제용으로 사용
 		_hBitmap := Gdip_CropImage(_hBitmap,x,y,w,h)
 		Gdip_DisposeImage(_hBitmap_temp)
@@ -45,24 +50,29 @@ CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0){
 ;return value :Bitmap pointer(address).If not zero, success.
 ;ex)Capture(0x50af4)
 ;======================================
-Capture(Title,X=0,Y=0,W=0,H=0,Flag=0){
-	if(!Init()){
+Capture(Title,X=0,Y=0,W=0,H=0,Flag=0)
+{
+	if(!Init())
+	{
 		return false
 	}
 	
 	WinGet, hWnd,ID,%Title%
-	if(hWnd == 0){
+	if(hWnd == 0)
+	{
 		return false
 	}	
 	_Token := Gdip_Startup()
 	_hBitmap := Gdip_BitmapFromHwnd(hWnd,Flag)
-	if(!_hBitmap){
+	if(!_hBitmap)
+	{
 		Gdip_ShutDown(_Token)
 		return false
 	}
 	
 	WinGetPos,_X,_Y,_Width,_Height,ahk_id %hWnd%
-	if(w!=0 && h!=0 && x >=0 && y >= 0 && w+x <= _Width && y+h <= _Height){
+	if(w!=0 && h!=0 && x >=0 && y >= 0 && w+x <= _Width && y+h <= _Height)
+	{
 		_hBitmap_temp := _hBitmap ;주소값 대입 후 메모리 해제용으로 사용
 		_hBitmap := Gdip_CropImage(_hBitmap,x,y,w,h)
 		Gdip_DisposeImage(_hBitmap_temp)
@@ -78,7 +88,8 @@ Capture(Title,X=0,Y=0,W=0,H=0,Flag=0){
 ;return value :If inactive ready is return 1,if not inactive ready is return 0
 ;ex)Capture("0|0|1920|1080")
 ;======================================
-Init(){
+Init()
+{
 	if not A_IsAdmin 
 	{ 
 		return false
@@ -106,18 +117,21 @@ return
 ;return value :1 if successful, 0 if failed
 ;ex)SendStr("Windows","hello world")
 ;======================================
-SendStr(Title,Str,Delay=0){
+SendStr(Title,Str,Delay=0)
+{
 	IfWinNotExist,%Title%
 	{
 		return false
 	}
-	if(strlen(Str) < 0){
+	if(strlen(Str) < 0)
+	{
 		return false
 	}
         Loop,Parse,Str,
         {
 			char := A_LoopField
-			if(char = " "){
+			if(char = " ")
+			{
 				char := "Space"
 			}
             ControlSend,,{%char%},%Title%
@@ -151,8 +165,10 @@ SendStr(Title,Str,Delay=0){
 ;return value: Number of images found
 ;ex)InactiveImageSearch("작업 관리자","test.png",X[1],Y[1])
 ;======================================
-InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection="T|L",Instances=1){
-	if(!Init()){
+InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection="T|L",Instances=1)
+{
+	if(!Init())
+	{
 		return false
 	}
 	
@@ -188,24 +204,26 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 	{
 		_SearchDirection := 1
 	}
-	;MsgBox,%_SearchDirection%
 	_Token := Gdip_Startup()
 	_hBitmap := Capture(Title)
-	if(_hBitmap = 0){
+	if(_hBitmap = 0)
+	{
 		Gdip_Shutdown(_Token)
 		return false
 	}
 	_Image := Gdip_CreateBitmapFromFile(Image)
-	if(_Image = 0){
-		if(_hBitmap != 0){
+	if(_Image = 0)
+	{
+		if(_hBitmap != 0)
+		{
 			Gdip_DisposeImage(_hBitmap)
 		}
 		Gdip_Shutdown(_Token)
 		return false
 	}
-	_Success := Gdip_ImageSearch(_hBitmap,_Image,PointArray,X1,Y1,X2,Y2,Loc,"",SearchDirection,Instances)
-	
-	if(_Success > 0){
+	_Success := Gdip_ImageSearch(_hBitmap,_Image,PointArray,X1,Y1,X2,Y2,Loc,"",SearchDirection,Instances)	
+	if(_Success > 0)
+	{
 		_ArrayX := Object()
 		_ArrayY := Object()
 		;MsgBox,%PointArray%
@@ -220,7 +238,8 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 		RefX := _ArrayX
 		RefY := _ArrayY
 	}
-	else{
+	else
+	{
 		RefX := 0
 		RefY := 0
 	}
@@ -255,8 +274,10 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 ;return value: Number of images found
 ;ex)ImageSearchFromFile("Background.png","target.png",X[1],Y[1])
 ;======================================
-ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection="T|L",Instances=1){
-	if(!Init()){
+ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection="T|L",Instances=1)
+{
+	if(!Init())
+	{
 		return false
 	}
 	
@@ -295,14 +316,16 @@ ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,
 	_Token := Gdip_Startup()
 	_BackgroundBitmap := Gdip_CreateBitmapFromFile(BackgroundImage)
 	_TargetBitmap := Gdip_CreateBitmapFromFile(TargetImage)
-	if(_BackgroundBitmap = 0 || _TargetBitmap = 0){
+	if(_BackgroundBitmap = 0 || _TargetBitmap = 0)
+	{
 		Gdip_Shutdown(_Token)
 		Gdip_DisposeImage(_BackgroundBitmap)
 		Gdip_DisposeImage(_TargetBitmap)
 		return false
 	}
 	_Success := Gdip_ImageSearch(_BackgroundBitmap,_TargetBitmap,PointArray,X1,Y1,X2,Y2,Loc,"",SearchDirection,Instances)
-	if(_Success > 0){
+	if(_Success > 0)
+	{
 		_ArrayX := Object()
 		_ArrayY := Object()
 		;MsgBox,%PointArray%
@@ -317,7 +340,8 @@ ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,
 		RefX := _ArrayX
 		RefY := _ArrayY
 	}
-	else{
+	else
+	{
 		RefX := 0
 		RefY := 0
 	}
@@ -342,12 +366,14 @@ ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,
 ;======================================
 InactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0)
 {
-	if(!Init()){
+	if(!Init())
+	{
 		return false
 	}
 	_Token := Gdip_Startup()
 	_hBitmap := Capture(Title)
-	if(_hBitmap = 0){
+	if(_hBitmap = 0)
+	{
 		Gdip_Shutdown(_Token)
 		return false
 	}
@@ -386,7 +412,8 @@ InactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0)
 ;return value :1 if successful, 0 if failed
 ;ex)HideWindow("작업 관리자")
 ;======================================
-HideWindow(Title){
+HideWindow(Title)
+{
 	WinGet, _hWnd,ID,%Title%
 	WinGetPos,,,_Width,_Height,ahk_id %_hWnd%
 	_X := _Width * -1
@@ -399,7 +426,8 @@ HideWindow(Title){
 ;Title : Window title
 ;ex)HideWindow("작업 관리자")
 ;======================================
-ShowWindow(Title){
+ShowWindow(Title)
+{
 	WinMove, %Title%,,0,0
 }
 ;======================================
@@ -407,7 +435,8 @@ ShowWindow(Title){
 ;vk : VK Code (https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes)
 ;ex)MakeKeyUpLParam(65)
 ;======================================
-MakeKeyUpLParam(vk=0){
+MakeKeyUpLParam(vk=0)
+{
 	_scan := DllCall("MapVirtualKey","Uint",vk,"Uint",0,"Uint")
 	_LParam := (0x00000001 | (_scan << 16))
 	return _LParam
@@ -417,7 +446,8 @@ MakeKeyUpLParam(vk=0){
 ;vk : VK Code (https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes)
 ;ex)MakeKeyUpLParam(65)
 ;======================================
-MakeKeyDownLParam(vk=0){
+MakeKeyDownLParam(vk=0)
+{
 	_scan := DllCall("MapVirtualKey","Uint",vk,"Uint",0,"Uint")
 	_LParam := (0x00000001 | (_scan << 16))
 	_LParam |= 0xC0000000
