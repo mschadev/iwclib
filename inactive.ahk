@@ -1,24 +1,41 @@
-﻿;======================================
-;Inactive Windows Program Capture for save
-;hWnd := Windows HWND 
-;X : Image X
-;Y : Image Y
-;W : Image Width
-;H : Image Height
-;Flag : PrintScreen API Flag
-;return value :Bitmap pointer(address).If not zero, success.
-;ex)Capture(0x50af4)
+﻿;!!!!!!!!!!README!!!!!!!!!!
+;작업 관리자 is Task manager
+;!!!!!!!!!!README!!!!!!!!!!
+
+
+
+
+
+
+;======================================
+;Inactive windows program capture for save
+;
+;Title: Windows program title
+;FilePath: Image save path
+;X: Image X
+;Y: Image Y
+;W: Image width
+;H: Image height
+;Flag: PrintScreen WINAPI Flag
+;
+;return value:
+;	0: Capture Failure
+;	-1: Requires administrator privileges
+;	-2: Windows program does not exist
+;	other(Bitmap Pointer): Success
+;
+;ex)CaptureforSave("작업관리자","background.png")
 ;======================================
 CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0)
 {
 	if not A_IsAdmin
 	{
-		return false
+		return -1
 	}
 	WinGet, hWnd,ID,%Title%
 	if(hWnd == 0)
 	{
-		return false
+		return -2
 	}	
 	_Token := Gdip_Startup()
 	_hBitmap := Gdip_BitmapFromHwnd(hWnd,Flag)
@@ -39,28 +56,36 @@ CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0)
 	Gdip_ShutDown(_Token)
 	return true
 }
+
 ;======================================
-;Inactive Windows Program Capture
-;hWnd := Windows HWND 
-;X : Image X
-;Y : Image Y
-;W : Image Width
-;H : Image Height
-;Flag : PrintScreen API Flag
-;return value :Bitmap pointer(address).If not zero, success.
-;ex)Capture(0x50af4)
+;inactive windows program capture
+;
+;Title: Windows program title
+;X: Image X
+;Y: Image Y
+;W: Image width
+;H: Image height
+;Flag: PrintScreen WINAPI Flag
+;
+;return value:
+;	0: Capture failure
+;	-1: Requires administrator privileges
+;	-2: Windows program does not exist
+;	other(Bitmap Pointer): Success
+;
+;ex)Capture("작업 관리자")
 ;======================================
 Capture(Title,X=0,Y=0,W=0,H=0,Flag=0)
 {
 	if not A_IsAdmin
 	{
-		return false
+		return -1
 	}
 	
 	WinGet, hWnd,ID,%Title%
 	if(hWnd == 0)
 	{
-		return false
+		return -2
 	}	
 	_Token := Gdip_Startup()
 	_hBitmap := Gdip_BitmapFromHwnd(hWnd,Flag)
@@ -81,12 +106,18 @@ Capture(Title,X=0,Y=0,W=0,H=0,Flag=0)
 	return _hBitmap
 
 }
+
 ;======================================
-;Inactive Mouse Click(left)
-;Title : Window title
-;X : Point X
-;Y : Point Y
-;ex)SimpleClick("Windows",100,100)
+;Inactive mouse click(left)
+;
+;Title: Windows program title
+;X: Point X
+;Y: Point Y
+;
+;return value:
+;	void
+;
+;ex)SimpleClick("작업 관리자",100,100)
 ;======================================
 SimpleClick(Title,X,Y)
 {
@@ -95,18 +126,24 @@ return
 }
 
 ;======================================
-;Inactive Send string
-;Title : Window title
-;Str : String
-;Delay : Input delay
-;return value :1 if successful, 0 if failed
-;ex)SendStr("Windows","hello world")
+;Send inactive string
+;
+;Title: Windows program title
+;Str: String
+;Delay: Input delay
+;
+;return value:
+;	1: Success
+;	0: String length is 0
+;	-1: Windows program does not exist
+;
+;ex)SendStr("작업 관리자","hello world")
 ;======================================
 SendStr(Title,Str,Delay=0)
 {
 	IfWinNotExist,%Title%
 	{
-		return false
+		return -1
 	}
 	if(strlen(Str) < 0)
 	{
@@ -124,18 +161,20 @@ SendStr(Title,Str,Delay=0)
         }
 		return true
 }
+
 ;======================================
-;;Inactive Image Search
-;Title := Windows title
-;image := Search image path
-;RefX := Point x var
-;RefY := Point y var
-;X1 := Rect left
-;Y1 := Rect top
-;X2 := Rect right
-;Y2 := Rect bottom
-;Loc := Image error range
-;SearchDirection := Haystack search direction
+;Inactive Image Search
+;
+;Title: Windows title
+;image: Search image path
+;RefX: Variable to store X coordinates
+;RefY: Variable to store Y coordinates
+;X1: Rect left
+;Y1: Rect top
+;X2: Rect right
+;Y2: Rect bottom
+;Loc: Image error range
+;SearchDirection: Haystack search direction
 ; Vertical preference:
 ;  T|L = top->left->right->bottom [default]
 ;  B|L = bottom->left->right->top
@@ -147,8 +186,10 @@ SendStr(Title,Str,Delay=0)
 ;  R|B = right->bottom->top->left
 ;  R|T = right->top->bottom->left
 ;Instances := Maximum number of instances to find when searching (0 = find all)
+;
 ;return value: Number of images found
-;ex)InactiveImageSearch("작업 관리자","test.png",X[1],Y[1])
+;
+;ex)InactiveImageSearch("작업 관리자","test.png",X,Y)
 ;======================================
 InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection="T|L",Instances=1)
 {
@@ -233,18 +274,20 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 	Gdip_Shutdown(_Token)
 	return _Success
 }
+
 ;======================================
-;ImageSearch from image file
-;BackgroundImage := Background image path
-;TargetImage := Target image path
-;RefX := Point x var
-;RefY := Point y var
-;X1 := Rect left
-;Y1 := Rect top
-;X2 := Rect right
-;Y2 := Rect bottom
-;Loc := Image error range
-;SearchDirection := Haystack search direction
+;ImageSearch from image
+
+;BackgroundImage: Background image path
+;TargetImage: Target image path
+;RefX: Variable to store X coordinates
+;RefY: Variable to store Y coordinates
+;X1: Rect left
+;Y1: Rect top
+;X2: Rect right
+;Y2: Rect bottom
+;Loc: Image error range
+;SearchDirection: Haystack search direction
 ; Vertical preference:
 ;  T|L = top->left->right->bottom [default]
 ;  B|L = bottom->left->right->top
@@ -256,8 +299,10 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 ;  R|B = right->bottom->top->left
 ;  R|T = right->top->bottom->left
 ;Instances := Maximum number of instances to find when searching (0 = find all)
+;
 ;return value: Number of images found
-;ex)ImageSearchFromFile("Background.png","target.png",X[1],Y[1])
+;
+;ex)ImageSearchFromFile("Background.png","target.png",X,Y)
 ;======================================
 ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection="T|L",Instances=1)
 {
@@ -335,18 +380,24 @@ ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,
 	Gdip_Shutdown(_Token)
 	return _Success
 }
+
 ;======================================
 ;Inactive Pixel Search
-;Title : Window title
-;ARGB := Pixel Color to Find
-;Delay : Input delay
-;X := Point x var
-;Y := Point y var
-;X1 := Rect left
-;Y1 := Rect top
-;X2 := Rect right
-;Y2 := Rect bottom
-;return value :1 if successful, 0 if failed
+;
+;Title: Windows program title
+;ARGB: Pixel color to find
+;Delay: Input delay
+;X: Variable to store X coordinates
+;Y: Variable to store Y coordinates
+;X1: Rect left
+;Y1: Rect top
+;X2: Rect right
+;Y2: Rect bottom
+;
+;return value:
+;	1: Success
+;	2: Failure
+;
 ;ex)InactivePixelSearch("작업 관리자",0xff03ceb4,X,Y)
 ;======================================
 InactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0)
@@ -391,10 +442,16 @@ InactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0)
 	Gdip_Shutdown(_Token)
 	return (E = 0 || E != "") ? 1 : 0
 }
+
 ;======================================
-;Hide Window
-;Title : Window title
-;return value :1 if successful, 0 if failed
+;Hide windows program
+;
+;Title: Windows program title
+;
+;return value:
+;	1:Success
+;	0:Failure
+;
 ;ex)HideWindow("작업 관리자")
 ;======================================
 HideWindow(Title)
@@ -406,18 +463,24 @@ HideWindow(Title)
 	;MsgBox,%_hWnd% %_X% %_Width% ;DEBUG
 	return DllCall("SetWindowPos", "UInt", _hWnd, "UInt", 0, "Int",_X, "Int",_Y, "Int",_Width, "Int",_Height, "UInt", 0x400)
 }
+
 ;======================================
-;Show hidden windows
-;Title : Window title
+;Show hidden windows program
+;
+;Title : Windows program title
+;
 ;ex)HideWindow("작업 관리자")
 ;======================================
 ShowWindow(Title)
 {
 	WinMove, %Title%,,0,0
 }
+
 ;======================================
 ;Function to create lparam required for 'postmessage'
+;
 ;vk : VK Code (https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes)
+;
 ;ex)MakeKeyUpLParam(65)
 ;======================================
 MakeKeyUpLParam(vk=0)
@@ -426,9 +489,12 @@ MakeKeyUpLParam(vk=0)
 	_LParam := (0x00000001 | (_scan << 16))
 	return _LParam
 }
+
 ;======================================
 ;Function to create lparam required for 'postmessage'
+;
 ;vk : VK Code (https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes)
+;
 ;ex)MakeKeyUpLParam(65)
 ;======================================
 MakeKeyDownLParam(vk=0)
