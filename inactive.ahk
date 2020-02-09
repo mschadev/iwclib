@@ -35,38 +35,6 @@ CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0){
 	return true
 }
 ;======================================
-;Inactive Windows Screen Capture
-;Screen := Screen Rect
-;return value :Bitmap pointer(address).If not zero, success.
-;ex)Capture("0|0|1920|1080")
-;======================================
-ScreenCapture(Screen=0){
-	_Token := Gdip_Startup()
-	_hBitmap := Gdip_BitmapFromScreen(Screen)
-	Gdip_ShutDown(_Token)
-	return _hBitmap
-}
-;======================================
-;Inactive Windows Screen Capture for save
-;FilePath := Image Save Path
-;Screen := Screen Rect
-;return value :1 if successful, 0 if failed
-;ex)Capture("0|0|1920|1080")
-;======================================
-ScreenCaptureforSave(FilePath,Screen=0){
-	_Token := Gdip_Startup()
-	_hBitmap := Gdip_BitmapFromScreen(Screen)
-	if(_hBitmap = 0){
-		return false
-	}
-	Gdip_SaveBitmapToFile(_hBitmap, FilePath)
-	Gdip_DisposeImage(_hBitmap)
-	Gdip_ShutDown(_Token)
-	
-	return true
-}
-
-;======================================
 ;Inactive Windows Program Capture
 ;hWnd := Windows HWND 
 ;X : Image X
