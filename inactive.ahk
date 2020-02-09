@@ -11,7 +11,7 @@
 ;======================================
 CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0)
 {
-	if(!Init())
+	if not A_IsAdmin
 	{
 		return false
 	}
@@ -52,7 +52,7 @@ CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0)
 ;======================================
 Capture(Title,X=0,Y=0,W=0,H=0,Flag=0)
 {
-	if(!Init())
+	if not A_IsAdmin
 	{
 		return false
 	}
@@ -80,21 +80,6 @@ Capture(Title,X=0,Y=0,W=0,H=0,Flag=0)
 	Gdip_ShutDown(_Token)
 	return _hBitmap
 
-}
-;======================================
-;Inactive ready Init Function
-;FilePath := Image Save Path
-;Screen := Screen Rect
-;return value :If inactive ready is return 1,if not inactive ready is return 0
-;ex)Capture("0|0|1920|1080")
-;======================================
-Init()
-{
-	if not A_IsAdmin 
-	{ 
-		return false
-	}
-	return true
 }
 ;======================================
 ;Inactive Mouse Click(left)
@@ -167,7 +152,7 @@ SendStr(Title,Str,Delay=0)
 ;======================================
 InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection="T|L",Instances=1)
 {
-	if(!Init())
+	if not A_IsAdmin
 	{
 		return false
 	}
@@ -276,7 +261,7 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 ;======================================
 ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10,SearchDirection="T|L",Instances=1)
 {
-	if(!Init())
+	if not A_IsAdmin
 	{
 		return false
 	}
@@ -366,7 +351,7 @@ ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,
 ;======================================
 InactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0)
 {
-	if(!Init())
+	if not A_IsAdmin
 	{
 		return false
 	}

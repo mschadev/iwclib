@@ -46,7 +46,6 @@ Table of supported functions.
 
 | Function          | Description                                          |
 | ----------------- | ---------------------------------------------------- |
-| Init              | Inactive ready Init Function                         |
 | MakeKeyDownLParam | Function to create lparam required for 'postmessage' |
 | MakeKeyUpLParam   | Function to create lparam required for 'postmessage' |
 
