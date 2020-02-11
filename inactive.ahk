@@ -8,9 +8,9 @@
 
 
 ;======================================
-;Inactive windows program capture for save
+;Inactive window program capture for save
 ;
-;Title: Windows program title
+;Title: Window program title
 ;FilePath: Image save path
 ;X: Image X
 ;Y: Image Y
@@ -21,7 +21,7 @@
 ;return value:
 ;	0: Capture Failure
 ;	-1: Requires administrator privileges
-;	-2: Windows program does not exist
+;	-2: Window program does not exist
 ;	other(Bitmap Pointer): Success
 ;
 ;ex)CaptureforSave("작업관리자","background.png")
@@ -58,9 +58,9 @@ CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0)
 }
 
 ;======================================
-;inactive windows program capture
+;inactive window program capture
 ;
-;Title: Windows program title
+;Title: Window program title
 ;X: Image X
 ;Y: Image Y
 ;W: Image width
@@ -70,7 +70,7 @@ CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0)
 ;return value:
 ;	0: Capture failure
 ;	-1: Requires administrator privileges
-;	-2: Windows program does not exist
+;	-2: Window program does not exist
 ;	other(Bitmap Pointer): Success
 ;
 ;ex)Capture("작업 관리자")
@@ -110,7 +110,7 @@ Capture(Title,X=0,Y=0,W=0,H=0,Flag=0)
 ;======================================
 ;Inactive mouse click(left)
 ;
-;Title: Windows program title
+;Title: Window program title
 ;X: Point X
 ;Y: Point Y
 ;
@@ -128,14 +128,14 @@ return
 ;======================================
 ;Send inactive string
 ;
-;Title: Windows program title
+;Title: Window program title
 ;Str: String
 ;Delay: Input delay
 ;
 ;return value:
 ;	1: Success
 ;	0: String length is 0
-;	-1: Windows program does not exist
+;	-1: Window program does not exist
 ;
 ;ex)SendStr("작업 관리자","hello world")
 ;======================================
@@ -165,7 +165,7 @@ SendStr(Title,Str,Delay=0)
 ;======================================
 ;Inactive Image Search
 ;
-;Title: Windows title
+;Title: Window title
 ;image: Search image path
 ;RefX: Variable to store X coordinates
 ;RefY: Variable to store Y coordinates
@@ -384,7 +384,7 @@ ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,
 ;======================================
 ;Inactive Pixel Search
 ;
-;Title: Windows program title
+;Title: Window program title
 ;ARGB: Pixel color to find
 ;Delay: Input delay
 ;X: Variable to store X coordinates
@@ -444,9 +444,9 @@ InactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0)
 }
 
 ;======================================
-;Hide windows program
+;Hide window program
 ;
-;Title: Windows program title
+;Title: Window program title
 ;
 ;return value:
 ;	1:Success
@@ -465,9 +465,9 @@ HideWindow(Title)
 }
 
 ;======================================
-;Show hidden windows program
+;Show hidden window program
 ;
-;Title : Windows program title
+;Title : Window program title
 ;
 ;ex)HideWindow("작업 관리자")
 ;======================================
