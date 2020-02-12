@@ -187,7 +187,13 @@ SendStr(Title,Str,Delay=0)
 ;  R|T = right->top->bottom->left
 ;Instances := Maximum number of instances to find when searching (0 = find all)
 ;
-;return value: Number of images found
+;return value:
+;	-1: Requires administrator privileges
+;	-2: Window program does not exist
+;	-3: Capture failure
+;	-4: Image load failure
+;	0: Image not found
+;	value > 0: Number of images found
 ;
 ;ex)InactiveImageSearch("작업 관리자","test.png",X,Y)
 ;======================================
@@ -195,9 +201,14 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 {
 	if not A_IsAdmin
 	{
-		return false
+		return -1
 	}
-	
+	WinGet, hWnd,ID,%Title%
+	if(hWnd == 0)
+	{
+		return -2
+	}
+
 	if(SearchDirection = "B|L")
 	{
 		_SearchDirection := 2
@@ -235,7 +246,7 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 	if(_hBitmap = 0)
 	{
 		Gdip_Shutdown(_Token)
-		return false
+		return -3
 	}
 	_Image := Gdip_CreateBitmapFromFile(Image)
 	if(_Image = 0)
@@ -245,10 +256,10 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 			Gdip_DisposeImage(_hBitmap)
 		}
 		Gdip_Shutdown(_Token)
-		return false
+		return -4
 	}
-	_Success := Gdip_ImageSearch(_hBitmap,_Image,PointArray,X1,Y1,X2,Y2,Loc,"",SearchDirection,Instances)	
-	if(_Success > 0)
+	_Count := Gdip_ImageSearch(_hBitmap,_Image,PointArray,X1,Y1,X2,Y2,Loc,"",SearchDirection,Instances)	
+	if(_Count > 0)
 	{
 		_ArrayX := Object()
 		_ArrayY := Object()
@@ -272,7 +283,7 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 	Gdip_DisposeImage(_hBitmap)
 	Gdip_DisposeImage(_Image)
 	Gdip_Shutdown(_Token)
-	return _Success
+	return _Count
 }
 
 ;======================================
@@ -300,7 +311,12 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 ;  R|T = right->top->bottom->left
 ;Instances := Maximum number of instances to find when searching (0 = find all)
 ;
-;return value: Number of images found
+;return value:
+;	-1: Requires administrator privileges
+;	-2: Background image load failure
+;	-3: Target image load failure
+;	0: Target image not found
+;	value > 0: Number of images found
 ;
 ;ex)ImageSearchFromFile("Background.png","target.png",X,Y)
 ;======================================
@@ -308,7 +324,7 @@ ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,
 {
 	if not A_IsAdmin
 	{
-		return false
+		return -1
 	}
 	
 	if(SearchDirection = "B|L")
@@ -351,7 +367,7 @@ ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,
 		Gdip_Shutdown(_Token)
 		Gdip_DisposeImage(_BackgroundBitmap)
 		Gdip_DisposeImage(_TargetBitmap)
-		return false
+		return (_BackgroundBitmap = 0 ? -2 : -3)
 	}
 	_Success := Gdip_ImageSearch(_BackgroundBitmap,_TargetBitmap,PointArray,X1,Y1,X2,Y2,Loc,"",SearchDirection,Instances)
 	if(_Success > 0)
@@ -395,8 +411,11 @@ ImageSearchFromFile(BackgroundImage,TargetImage,byref RefX,byref RefY,X1=0,Y1=0,
 ;Y2: Rect bottom
 ;
 ;return value:
+;	-1: Requires administrator privileges
+;	-2: Window program does not exist
+;	-3: Capture failure
+;	0: Pixel not found(failure)
 ;	1: Success
-;	2: Failure
 ;
 ;ex)InactivePixelSearch("작업 관리자",0xff03ceb4,X,Y)
 ;======================================
@@ -404,14 +423,19 @@ InactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0)
 {
 	if not A_IsAdmin
 	{
-		return false
+		return -1
+	}
+	WinGet, hWnd,ID,%Title%
+	if(hWnd == 0)
+	{
+		return -2
 	}
 	_Token := Gdip_Startup()
 	_hBitmap := Capture(Title)
 	if(_hBitmap = 0)
 	{
 		Gdip_Shutdown(_Token)
-		return false
+		return -3
 	}
 	static _PixelSearch
 	if !_PixelSearch
@@ -497,6 +521,9 @@ ShowWindow(Title)
 ;
 ;vk : VK Code (https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes)
 ;
+;return value:
+;	integer: LParam
+;
 ;ex)MakeKeyUpLParam(65)
 ;======================================
 MakeKeyUpLParam(vk=0)
@@ -510,6 +537,9 @@ MakeKeyUpLParam(vk=0)
 ;Function to create lparam required for 'postmessage'
 ;
 ;vk : VK Code (https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes)
+;
+;return value:
+;	integer: LParam
 ;
 ;ex)MakeKeyUpLParam(65)
 ;======================================
