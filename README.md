@@ -25,8 +25,6 @@ Table of supported functions.
 | Function             | Description                               |
 | -------------------- | ----------------------------------------- |
 | CaptureforSave       | Inactive Windows Program Capture for save |
-| ScreenCapture        | Inactive Windows Screen Capture           |
-| ScreenCaptureforSave | Inactive Windows Screen Capture for save  |
 | Capture              | Inactive Windows Program Capture          |
 
 ### Control
