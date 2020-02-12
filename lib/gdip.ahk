@@ -354,11 +354,11 @@ Gdip_BitmapFromScreen(Screen=0, Raster="")
 ;
 ; notes					Window must not be not minimised in order to get a handle to it's client area
 
-Gdip_BitmapFromHWND(hwnd)
+Gdip_BitmapFromHWND(hwnd,Flag)
 {
 	WinGetPos,,, Width, Height, ahk_id %hwnd%
 	hbm := CreateDIBSection(Width, Height), hdc := CreateCompatibleDC(), obm := SelectObject(hdc, hbm)
-	PrintWindow(hwnd, hdc)
+	PrintWindow(hwnd, hdc,Flag)
 	pBitmap := Gdip_CreateBitmapFromHBITMAP(hbm)
 	SelectObject(hdc, obm), DeleteObject(hbm), DeleteDC(hdc)
 	return pBitmap
@@ -2374,7 +2374,7 @@ Gdip_Shutdown(pToken)
 	Ptr := A_PtrSize ? "UPtr" : "UInt"
 	
 	DllCall("gdiplus\GdiplusShutdown", Ptr, pToken)
-	if hModule := DllCall("GetModuleHandle", "str", "gdiplus", Ptr)
+	if hModule := DllCall("GetModuleHandle", "str", "gdiplus")
 		DllCall("FreeLibrary", Ptr, hModule)
 	return 0
 }
