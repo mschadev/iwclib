@@ -416,13 +416,22 @@ InactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0)
 	static _PixelSearch
 	if !_PixelSearch
 	{
-		MCode_PixelSearch := "8B44241099535583E2035603C233F6C1F80239742418577E388B7C24148B6C24248B5424188D1C85000000008D64240033C085"
-		. "D27E108BCF3929743183C00183C1043BC27CF283C60103FB3B74241C7CDF8B4424288B4C242C5F5EC700FFFFFFFF5DC701FFFFFFFF83C8FF5BC38B4C2"
-		. "4288B54242C5F890189325E5D33C05BC3"
-
-		VarSetCapacity(_PixelSearch, StrLen(MCode_PixelSearch)//2)
-		Loop % StrLen(MCode_PixelSearch)//2      ;%
-			NumPut("0x" SubStr(MCode_PixelSearch, (2*A_Index)-1, 2), _PixelSearch, A_Index-1, "char")
+		if(A_PtrSize = 4)
+		{
+			MCode_PixelSearch := "8B44241099535583E2035603C233F6C1F80239742418577E388B7C24148B6C24248B5424188D1C85000000008D64240033C085"
+			. "D27E108BCF3929743183C00183C1043BC27CF283C60103FB3B74241C7CDF8B4424288B4C242C5F5EC700FFFFFFFF5DC701FFFFFFFF83C8FF5BC38B4C2"
+			. "4288B54242C5F890189325E5D33C05BC3" ;Laszlo style
+			VarSetCapacity(_PixelSearch, StrLen(MCode_PixelSearch)//2)
+			Loop % StrLen(MCode_PixelSearch)//2      ;%
+				NumPut("0x" SubStr(MCode_PixelSearch, (2*A_Index)-1, 2), _PixelSearch, A_Index-1, "char")
+		}
+		else
+		{
+			MCode_PixelSearch := "2,x64:VUiJ5UiD7EBIiU0QiVUYRIlFIESJTShIi0UQSIlF8ItFMMHoGIlF7ItFMMHoECX/AAAAiUXoi0UwwegIJf8AAACJReSLRTAl/wAAAIlF4MdF/AAAAADpyAAAAMdF+AAAAADprAAAAItF+MHgAkhj0ItF/A+vRSiNSAOFwA9IwcH4AkiYSAHQSI0UhQAAAABIi0XwSAHQSIlF2EiLRdiLAMHoGIlF1EiLRdiLAMHoECX/AAAAiUXQSItF2IsAwegIJf8AAACJRcxIi0XYiwAl/wAAAIlFyItF7DtF1HUxi0XoO0XQdSmLReQ7Rcx1IYtF4DtFyHUZSItFOItV+IkQSItFQItV/IkQuAEAAADrJYNF+AGLRfg7RRgPjEj///+DRfwBi0X8O0UgD4ws////uAAAAABIg8RAXcOQkJCQkJA=" ;Bentschi style
+			;This function is "C_function\PixelSearch.c"
+			_PixelSearch := __BentschiMCode__(MCode_PixelSearch)
+		}
+		
 	}
 	Gdip_GetImageDimensions(_hBitmap, Width, Height)
 	if !(Width && Height)
@@ -433,14 +442,21 @@ InactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0)
 		return -2
 	
 	x := y := 0
-	E := DllCall(&_PixelSearch, "uint", Scan01, "int", Width, "int", Height, "int", Stride1, "uint",ARGB, "int*", x, "int*", y)
+	if(A_PtrSize = 4)
+	{
+		E := DllCall(&_PixelSearch, "uint", Scan01, "int", Width, "int", Height, "int", Stride1, "uint",ARGB, "int*", x, "int*", y)
+	}
+	else
+	{
+		E := DllCall(_PixelSearch,"uint",Scan01,"int",Width,"int",Height,"int",Stride1,"uint",ARGB,"int*",x,"int*",y,"cdecl int")
+	}
 	X += X1 ;비트맵 시작점 X1만큼 추가해줘야 비트맵 크기에서 좌표 값 나옴
 	Y += Y1 ;비트맵 시작점 Y1만큼 추가해줘야 비트맵 크기에서 좌표 값 나옴
 	;MsgBox,%hWnd% %_hBitmap% %y% %y% %E% %Width% %Height% %X1% %Y1% %X2% %Y2% ;DEBUG
 	Gdip_UnlockBits(_hBitmap, BitmapData1)
 	Gdip_DisposeImage(_hBitmap)
 	Gdip_Shutdown(_Token)
-	return (E = 0 || E != "") ? 1 : 0
+	return (E = 1 || E != "") ? 1 : 0
 }
 
 ;======================================
@@ -503,4 +519,29 @@ MakeKeyDownLParam(vk=0)
 	_LParam := (0x00000001 | (_scan << 16))
 	_LParam |= 0xC0000000
 	return _LParam
+}
+
+;======================================
+;Bentschi MCode Function
+;
+;mcode: Mcode(https://autohotkey.com/board/topic/89283-mcode-function-onlinegenerator-x86-and-x64/)
+;
+;return value:
+;	integer: function pointer
+;
+;ex)MCode("2,x86:aipYww==,x64:uCoAAADD")
+;======================================
+__BentschiMCode__(mcode)
+{
+  static e := {1:4, 2:1}, c := (A_PtrSize=8) ? "x64" : "x86"
+  if (!regexmatch(mcode, "^([0-9]+),(" c ":|.*?," c ":)([^,]+)", m))
+    return
+  if (!DllCall("crypt32\CryptStringToBinary", "str", m3, "uint", 0, "uint", e[m1], "ptr", 0, "uint*", s, "ptr", 0, "ptr", 0))
+    return
+  p := DllCall("GlobalAlloc", "uint", 0, "ptr", s, "ptr")
+  if (c="x64")
+    DllCall("VirtualProtect", "ptr", p, "ptr", s, "uint", 0x40, "uint*", op)
+  if (DllCall("crypt32\CryptStringToBinary", "str", m3, "uint", 0, "uint", e[m1], "ptr", p, "uint*", s, "ptr", 0, "ptr", 0))
+    return p
+  DllCall("GlobalFree", "ptr", p)
 }
