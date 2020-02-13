@@ -3,9 +3,9 @@
 This is a simple library for using inactive functions.
 
 # Support version
-- ## Unicode32  
-- ## Unicode64  
-
+- ### Unicode32  
+- ### Unicode64  
+- ### ANSI32
 # Installation
 
 1. Download "lib\gdip.ahk" and "Inactive.ahk."
