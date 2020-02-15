@@ -41,6 +41,7 @@ Table of supported functions.
 | InactiveImageSearch | Inactive Image Search       |
 | ImageSearchFromFile | ImageSearch From Image File |
 | InactivePixelSearch | Inactive Pixel Search       |
+| MultipleInactivePixelSearch | Multiple Inactive Pixel Search |
 | HideWindow          | Hide Window                 |
 | ShowWindow          | Show Window                 |
 
