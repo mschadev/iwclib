@@ -474,13 +474,104 @@ InactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0)
 	{
 		E := DllCall(_PixelSearch,"uint",Scan01,"int",Width,"int",Height,"int",Stride1,"uint",ARGB,"int*",x,"int*",y,"cdecl int")
 	}
-	X += X1 ;비트맵 시작점 X1만큼 추가해줘야 비트맵 크기에서 좌표 값 나옴
-	Y += Y1 ;비트맵 시작점 Y1만큼 추가해줘야 비트맵 크기에서 좌표 값 나옴
+	
 	;MsgBox,%hWnd% %_hBitmap% %y% %y% %E% %Width% %Height% %X1% %Y1% %X2% %Y2% ;DEBUG
 	Gdip_UnlockBits(_hBitmap, BitmapData1)
 	Gdip_DisposeImage(_hBitmap)
 	Gdip_Shutdown(_Token)
 	return (E = 1 || E != "") ? 1 : 0
+}
+
+;======================================
+;Multiple Inactive Pixel Search
+;
+;Title: Window program title
+;ARGB: Pixel color to find
+;Delay: Input delay
+;X: Variable to store X coordinates
+;Y: Variable to store Y coordinates
+;X1: Rect left
+;Y1: Rect top
+;X2: Rect right
+;Y2: Rect bottom
+;Instances := Maximum number of instances to find when searching (0 = find all)
+;
+;return value:
+;	-1: Requires administrator privileges
+;	-2: Window program does not exist
+;	-3: Capture failure
+;	0: Pixel not found(failure)
+;	value > 0: Number of pixel found
+;
+;ex)MultipleInactivePixelSearch("작업 관리자",0xff03ceb4,X,Y,0,0,0,0,3)
+;======================================
+MultipleInactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0,Instances=0)
+{
+		if not A_IsAdmin
+	{
+		return -1
+	}
+	WinGet, hWnd,ID,%Title%
+	if(hWnd == 0)
+	{
+		return -2
+	}
+	_Token := Gdip_Startup()
+	_hBitmap := Capture(Title)
+	
+	if(_hBitmap = 0)
+	{
+		Gdip_Shutdown(_Token)
+		return -3
+	}
+	static _MultiplePixelSearch
+	if !_MultiplePixelSearch
+	{
+		if(A_PtrSize = 4)
+		{
+			MCode_MultiplePixelSearch := "2,x86:VYnlg+wwi0UIiUX0i0UgwegYiUXwi0UgwegQJf8AAACJReyLRSDB6Agl/wAAAIlF6ItFICX/AAAAiUXki0UMiUX8i0UQiUX46bcAAACLRfyNFIUAAAAAi0X4D69FHAHQjVADhcAPSMLB+AKNFIUAAAAAi0X0AdCJReCLReCLAMHoGIlF3ItF4IsAwegQJf8AAACJRdiLReCLAMHoCCX/AAAAiUXUi0XgiwAl/wAAAIlF0ItF8DtF3HUvi0XsO0XYdSeLReg7RdR1H4tF5DtF0HUXi0Uki1X8iRCLRSiLVfiJELgBAAAA6yiDRfwBi0X8O0UUD4xU////x0X8AAAAAINF+AGLRfg7RRh84bgAAAAAycOQ" ;Bentschi style
+			;This function is "C_function\MultiplePixelSearch.c"
+		}
+		else
+		{
+			MCode_MultiplePixelSearch := "2,x64:VUiJ5UiD7EBIiU0QiVUYRIlFIESJTShIi0UQSIlF8ItFQMHoGIlF7ItFQMHoECX/AAAAiUXoi0VAwegIJf8AAACJReSLRUAl/wAAAIlF4ItFGIlF/ItFIIlF+OnDAAAAi0X8jRSFAAAAAItF+A+vRTgB0I1QA4XAD0jCwfgCSJhIjRSFAAAAAEiLRfBIAdBIiUXYSItF2IsAwegYiUXUSItF2IsAwegQJf8AAACJRdBIi0XYiwDB6Agl/wAAAIlFzEiLRdiLACX/AAAAiUXIi0XsO0XUdTGLReg7RdB1KYtF5DtFzHUhi0XgO0XIdRlIi0VIi1X8iRBIi0VQi1X4iRC4AQAAAOsog0X8AYtF/DtFKA+MSP///8dF/AAAAACDRfgBi0X4O0UwfOG4AAAAAEiDxEBdw5CQkJCQkJCQkJA="
+		}
+		_MultiplePixelSearch := __BentschiMCode__(MCode_MultiplePixelSearch)
+	}
+	Gdip_GetImageDimensions(_hBitmap, Width, Height)
+	if !(Width && Height)
+		return -1
+	clone := Gdip_CloneBitmapArea(_hBitmap,0,0,Width,Height)
+	Width := (X2 != 0) ? X2-X1 : Width
+	Height := (Y2 != 0) ? Y2-Y1 : Height
+	if (E1 := Gdip_LockBits(_hBitmap, X1, Y1, Width, Height, Stride1, Scan01, BitmapData1))
+		return -2
+	
+	_ResultX := _ResultY := 0
+	_X := _Y := 0
+	_ArrayX := Object()
+	_ArrayY := Object()
+	_Count := 0
+	while((E := DllCall(_MultiplePixelSearch,"uint",Scan01,"int",_X,"int",_Y,"int",Width,"int",Height,"int",Stride1,"uint",ARGB,"int*",_ResultX,"int*",_ResultY,"cdecl uint")) = 1)
+	{
+		;MsgBox,In while %_ResultX% %_ResultY%
+		Gdip_SetPixel(clone,_ResultX,_ResultY,0xffff0000)
+		_X := _ResultX+1
+		_Y := _ResultY 
+		_ArrayX.Insert(_X-1)
+		_ArrayY.Insert(_Y)
+		_Count++
+		if(_Count=Instances)
+		{
+			break
+		}
+	}
+	X := _ArrayX
+	Y := _ArrayY
+	Gdip_UnlockBits(_hBitmap, BitmapData1)
+	Gdip_DisposeImage(_hBitmap)
+	Gdip_Shutdown(_Token)
+	return _Count
 }
 
 ;======================================
