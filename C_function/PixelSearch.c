@@ -8,7 +8,7 @@ int PixelSearch(unsigned int * scan0,int width,int height,int stride,unsigned in
     {
         for (int x = 0; x < width; x++)
         {
-			unsigned int * data = p+(x*4)+(y*stride)/4;
+			unsigned int * data = p+((x*4)+(y*stride))/4;
 			int bitmapA = (*data >> 24) & 255;
 			int bitmapR = (*data >> 16) & 255;
 			int bitmapG = (*data >> 8) & 255;
