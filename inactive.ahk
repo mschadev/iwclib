@@ -589,7 +589,8 @@ HideWindow(Title)
 {
 	WinGet, _hWnd,ID,%Title%
 	WinGetPos,,,_Width,_Height,ahk_id %_hWnd%
-	_X := _Width * -1
+	;_X := _Width * -1
+	_X := -20000
 	_Y := 0
 	;MsgBox,%_hWnd% %_X% %_Width% ;DEBUG
 	return DllCall("SetWindowPos", "UInt", _hWnd, "UInt", 0, "Int",_X, "Int",_Y, "Int",_Width, "Int",_Height, "UInt", 0x400)
