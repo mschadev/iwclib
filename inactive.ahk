@@ -555,7 +555,6 @@ MultipleInactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0,In
 	while((E := DllCall(_MultiplePixelSearch,"uint",Scan01,"int",_X,"int",_Y,"int",Width,"int",Height,"int",Stride1,"uint",ARGB,"int*",_ResultX,"int*",_ResultY,"cdecl uint")) = 1)
 	{
 		;MsgBox,In while %_ResultX% %_ResultY%
-		Gdip_SetPixel(clone,_ResultX,_ResultY,0xffff0000)
 		_X := _ResultX+1
 		_Y := _ResultY 
 		_ArrayX.Insert(_X-1)
