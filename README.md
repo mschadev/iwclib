@@ -6,6 +6,7 @@ This is a simple library for using inactive functions.
 - ### Unicode32  
 - ### Unicode64  
 - ### ANSI32
+
 # Installation
 
 1. Download [here](./releases)
