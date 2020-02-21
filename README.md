@@ -8,12 +8,11 @@ This is a simple library for using inactive functions.
 - ### ANSI32
 # Installation
 
-1. Download "lib\gdip.ahk" and "Inactive.ahk."
-2. Include "gdip.ahk" and "Inactive.ahk" in the script.
+1. Download [here](./releases)
+2. Include "inactive-full.ahk" in the script.
 
 ```autoit
-#include gdip.ahk
-#include inactive.ahk
+#include inactive-full.ahk
 ```
 
 # Supported functions
