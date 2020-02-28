@@ -1,5 +1,5 @@
 ﻿#include ..\lib\gdip.ahk
-#include ..\inactive.ahk
+#include ..\iwclib.ahk
 _Count := MultipleInactivePixelSearch("작업 관리자",0xff0078d7,X,Y,0,0,50,600)
 MsgBox,Count:%_Count%
 loop,%_Count%

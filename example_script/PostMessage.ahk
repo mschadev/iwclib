@@ -1,5 +1,5 @@
 ﻿#include ..\lib\gdip.ahk
-#include ..\inactive.ahk
+#include ..\iwclib.ahk
 UpLParam := MakeKeyUpLParam(65) ;A key
 DownLParam := MakeKeyDownLParam(65) ;A key
 ;MsgBox,UpLParam:%UpLParam% DownLParam:%DownLParam%
