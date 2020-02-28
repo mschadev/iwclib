@@ -1,6 +1,5 @@
-﻿# Ahk-inactive-library
-
-This is a simple library for using inactive functions.
+﻿# iwclib
+Simple Inactive Windows Control Library for AutoHotKey(L)
 
 # Support version
 - ### Unicode32  
@@ -9,10 +8,10 @@ This is a simple library for using inactive functions.
 # Installation
 
 1. Download [here](./releases)
-2. Include "inactive-full.ahk" in the script.
+2. Include "iwclib-full.ahk" in the script.
 
-```autoit
-#include inactive-full.ahk
+```autohotkey
+#include iwclib-full.ahk
 ```
 
 # Supported functions
@@ -51,7 +50,7 @@ Table of supported functions.
 | MakeKeyDownLParam | Function to create lparam required for 'postmessage' |
 | MakeKeyUpLParam   | Function to create lparam required for 'postmessage' |
 
-## development environment
+# development environment
 
 Windows 10 64bit,Autohotkey v1.1.30.01 (UniCode 32-bit)
 
