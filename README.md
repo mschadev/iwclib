@@ -1,5 +1,6 @@
 ﻿# iwclib
-Simple Inactive Windows Control Library for AutoHotKey(L)
+Simple Inactive Windows Control Library for AutoHotKey(L)  
+Autohotkey Forum Post: [here](https://www.autohotkey.com/boards/viewtopic.php?f=6&t=73094)  
 
 # Support version
 - ### Unicode32  
@@ -43,6 +44,7 @@ Table of supported functions.
 | MultipleInactivePixelSearch | Multiple Inactive Pixel Search |
 | HideWindow          | Hide Window                 |
 | ShowWindow          | Show Window                 |
+| IsWindowMinimize    | Check the window for minimize |
 
 ### Etc
 
@@ -51,9 +53,11 @@ Table of supported functions.
 | MakeKeyDownLParam | Function to create lparam required for 'postmessage' |
 | MakeKeyUpLParam   | Function to create lparam required for 'postmessage' |
 
-# development environment
+# Development Environment
 
-Windows 10 64bit,Autohotkey v1.1.30.01 (UniCode 32-bit)
+Windows 10 64bit  
+Autohotkey v1.1.30.01  
+UniCode 32bit
 
 # License
 
