@@ -1,5 +1,5 @@
 ﻿#include ..\lib\gdip.ahk
-#include ..\inactive.ahk
+#include ..\iwclib.ahk
 SucCount := InactiveImageSearch("작업 관리자","Target.png",X,Y,0,0,0,0,5,"T|R",0)
 MsgBox,%SucCount%
 if(SucCount > 0)
