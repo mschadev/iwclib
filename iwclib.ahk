@@ -1,11 +1,33 @@
 ﻿;!!!!!!!!!!README!!!!!!!!!!
 ;작업 관리자 is Task manager
+;
+;Version: 1.0.1
+;
 ;!!!!!!!!!!README!!!!!!!!!!
 
 
 
-
-
+;======================================
+;Check the window for minimize
+;
+;Title: Window program title
+;
+;return value:
+;	1: Window is minimized
+;	0: Window is not minimized
+;ex)IsWindowMinimize("작업관리자")
+;======================================
+IsWindowMinimize(Title){
+	WinGet,Result,MinMax,%Title%
+	if(Result = -1)
+	{
+		return true
+	}
+	else
+	{
+		return false
+	}
+}
 
 ;======================================
 ;Inactive window program capture for save
@@ -38,7 +60,7 @@ CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0)
 		return -2
 	}	
 	_Token := Gdip_Startup()
-	_hBitmap := Gdip_BitmapFromHwnd(hWnd,Flag)
+	_hBitmap := Gdip_BitmapFromScreen("hwnd:" hWnd)
 	if(!_hBitmap)
 	{
 		Gdip_ShutDown(_Token)
@@ -88,7 +110,7 @@ Capture(Title,X=0,Y=0,W=0,H=0,Flag=0)
 		return -2
 	}	
 	_Token := Gdip_Startup()
-	_hBitmap := Gdip_BitmapFromHwnd(hWnd,Flag)
+	_hBitmap := Gdip_BitmapFromScreen("hwnd:" hWnd)
 	if(!_hBitmap)
 	{
 		Gdip_ShutDown(_Token)
