@@ -18,14 +18,15 @@ Autohotkey Forum Post: [here](https://www.autohotkey.com/boards/viewtopic.php?f=
 
 # Supported functions
 
-Table of supported functions.
+Table of supported functions.  
+If exist `*` before function name,  __Requires administrator privileges__
 
 ### Capture
 
 | Function             | Description                               |
 | -------------------- | ----------------------------------------- |
-| CaptureforSave       | Inactive Windows Program Capture for save |
-| Capture              | Inactive Windows Program Capture          |
+| *CaptureforSave       | Inactive Windows Program Capture for save |
+| *Capture              | Inactive Windows Program Capture          |
 
 ### Control
 
@@ -38,10 +39,10 @@ Table of supported functions.
 
 | Function            | Description                 |
 | ------------------- | --------------------------- |
-| InactiveImageSearch | Inactive Image Search       |
-| ImageSearchFromFile | ImageSearch From Image File |
-| InactivePixelSearch | Inactive Pixel Search       |
-| MultipleInactivePixelSearch | Multiple Inactive Pixel Search |
+| *InactiveImageSearch | Inactive Image Search       |
+| *ImageSearchFromFile | ImageSearch From Image File |
+| *InactivePixelSearch | Inactive Pixel Search       |
+| *MultipleInactivePixelSearch | Multiple Inactive Pixel Search |
 | HideWindow          | Hide Window                 |
 | ShowWindow          | Show Window                 |
 | IsWindowMinimize    | Check the window for minimize |
