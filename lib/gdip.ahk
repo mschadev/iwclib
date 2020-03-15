@@ -2712,18 +2712,6 @@ StrGetB(Address, Length=-1, Encoding=0)
 	return String
 }
 
-;===================================================================
-;Add
-
-Gdip_CropImage(pBitmap, x, y, w, h)
-{
-pBitmap2 := Gdip_CreateBitmap(w, h), G2 := Gdip_GraphicsFromImage(pBitmap2)
-Gdip_DrawImage(G2, pBitmap, 0, 0, w, h, x, y, w, h)
-Gdip_DeleteGraphics(G2)
-Gdip_DisposeImage(G2)
-return pBitmap2
-}
-
 
 ;**********************************************************************************
 ;
