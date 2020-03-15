@@ -214,7 +214,7 @@ InactiveImageSearch(Title,Image,byref RefX,byref RefY,X1=0,Y1=0,X2=0,Y2=0,Loc=10
 		_SearchDirection := 1
 	}
 	_Token := Gdip_Startup()
-	_hBitmap := Capture(Title)
+	_hBitmap := Gdip_BitmapFromScreen("hwnd:" hWnd)
 	if(_hBitmap = 0)
 	{
 		Gdip_Shutdown(_Token)
@@ -403,7 +403,7 @@ InactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0)
 		return -2
 	}
 	_Token := Gdip_Startup()
-	_hBitmap := Capture(Title)
+	_hBitmap := Gdip_BitmapFromScreen("hwnd:" hWnd)
 	if(_hBitmap = 0)
 	{
 		Gdip_Shutdown(_Token)
@@ -489,7 +489,7 @@ MultipleInactivePixelSearch(Title, ARGB, ByRef X, ByRef Y,X1=0,Y1=0,X2=0,Y2=0,In
 		return -2
 	}
 	_Token := Gdip_Startup()
-	_hBitmap := Capture(Title)
+	_hBitmap := Gdip_BitmapFromScreen("hwnd:" hWnd)
 	
 	if(_hBitmap = 0)
 	{
