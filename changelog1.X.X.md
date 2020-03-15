@@ -8,6 +8,7 @@ Origin [here](https://docs.microsoft.com/en-us/windows/win32/api/gdiplusinit/nf-
 That is, objects created after the Gdip_Shutdown function is called are not available.  
 So there is a memory leak.  
 - Change to Gdip_BitmapFromScreen function from Capture function.(In InactiveImageSearch, InactivePixelSearch, MultipleInactivePixelSearch)
+- Change to Gdip_CloneBitmapArea function from Gdip_CropImage function.(In CaptureforSave)
 
 ## 1.0.1
 - Add IsWindowMinimize function
