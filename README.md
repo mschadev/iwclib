@@ -26,7 +26,6 @@ If exist `*` before function name,  __Requires administrator privileges__
 | Function             | Description                               |
 | -------------------- | ----------------------------------------- |
 | *CaptureforSave       | Inactive Windows Program Capture for save |
-| *Capture              | Inactive Windows Program Capture          |
 
 ### Control
 

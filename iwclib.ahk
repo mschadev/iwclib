@@ -80,56 +80,6 @@ CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0)
 }
 
 ;======================================
-;inactive window program capture
-;
-;Title: Window program title
-;X: Image X
-;Y: Image Y
-;W: Image width
-;H: Image height
-;Flag: PrintScreen WINAPI Flag
-;
-;return value:
-;	0: Capture failure
-;	-1: Requires administrator privileges
-;	-2: Window program does not exist
-;	other(Bitmap Pointer): Success
-;
-;ex)Capture("작업 관리자")
-;======================================
-Capture(Title,X=0,Y=0,W=0,H=0,Flag=0)
-{
-	if not A_IsAdmin
-	{
-		return -1
-	}
-	
-	WinGet, hWnd,ID,%Title%
-	if(hWnd == 0)
-	{
-		return -2
-	}	
-	_Token := Gdip_Startup()
-	_hBitmap := Gdip_BitmapFromScreen("hwnd:" hWnd)
-	if(!_hBitmap)
-	{
-		Gdip_ShutDown(_Token)
-		return false
-	}
-	
-	WinGetPos,_X,_Y,_Width,_Height,ahk_id %hWnd%
-	if(w!=0 && h!=0 && x >=0 && y >= 0 && w+x <= _Width && y+h <= _Height)
-	{
-		_hBitmap_temp := _hBitmap ;주소값 대입 후 메모리 해제용으로 사용
-		_hBitmap := Gdip_CropImage(_hBitmap,x,y,w,h)
-		Gdip_DisposeImage(_hBitmap_temp)
-	}
-	Gdip_ShutDown(_Token)
-	return _hBitmap
-
-}
-
-;======================================
 ;Inactive mouse click(left)
 ;
 ;Title: Window program title
