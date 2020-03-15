@@ -1,3 +1,12 @@
+## 1.0.2
+- Remove `Capture` function
+### Why?
+> You must call GdiplusStartup before you create any GDI+ objects, and you must delete all of your GDI+ objects (or have them go out of scope) 
+before you call GdiplusShutdown. - MS Docs  
+
+Origin [here](https://docs.microsoft.com/en-us/windows/win32/api/gdiplusinit/nf-gdiplusinit-gdiplusstartup#remarks)  
+That is, objects created after the Gdip_Shutdown function is called are not available.
+
 ## 1.0.1
 - Add IsWindowMinimize function
 - In __CaptureforSave__ function, change Gdip_BitmapFromHWND to Gdip_BitmapFromScreen
