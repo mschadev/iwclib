@@ -1,4 +1,5 @@
 ﻿# iwclib
+![](https://img.shields.io/github/repo-size/zxc010613/iwclib)  
 Simple Inactive Windows Control Library for AutoHotKey(L)  
 Autohotkey Forum Post: [here](https://www.autohotkey.com/boards/viewtopic.php?f=6&t=73094)  
 
