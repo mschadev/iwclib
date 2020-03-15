@@ -70,7 +70,7 @@ CaptureforSave(Title,FilePath,X=0,Y=0,W=0,H=0,Flag=0)
 	if(w!=0 && h!=0 && x >=0 && y >= 0 && w+x <= _Width && y+h <= _Height)
 	{
 		_hBitmap_temp := _hBitmap ;주소값 대입 후 메모리 해제용으로 사용
-		_hBitmap := Gdip_CropImage(_hBitmap,x,y,w,h)
+		_hBitmap := Gdip_CloneBitmapArea(_hBitmap,x,y,w,h)
 		Gdip_DisposeImage(_hBitmap_temp)
 	}
 	Gdip_SaveBitmapToFile(_hBitmap, FilePath)
